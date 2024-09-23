@@ -2,6 +2,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 import sys
 import io
+import os  # Add the os module to get environment variables
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -26,10 +27,6 @@ def show_menu():
  3. View Total Spent
 
  4.Exit
-
-
-
-
 
                             Please choose your option?:
                             """
@@ -65,7 +62,7 @@ def handle_input(data):
     data = data.strip().lower()
 
     if step == 0:
-        # We  in the menu
+        # We are in the menu
         output = process_menu_option(data)
         if "Goodbye" in output:
             socketio.emit('output', output)
@@ -122,5 +119,7 @@ def handle_start_execution():
     output = "Welcome to the Expense Tracker!\n" + show_menu()
     socketio.emit('output', output)
 
+# Update this part for production deployment
 if __name__ == '__main__':
-    socketio.run(app, host='127.0.0.1', port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Get port from environment variable, fallback to 5000
+    socketio.run(app, host='0.0.0.0', port=port)  # Listen on all interfaces, use Railway's port
