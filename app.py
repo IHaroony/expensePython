@@ -65,7 +65,7 @@ def handle_input(data):
     data = data.strip().lower()
 
     if step == 0:
-        # We are in the menu
+        # We  in the menu
         output = process_menu_option(data)
         if "Goodbye" in output:
             socketio.emit('output', output)
